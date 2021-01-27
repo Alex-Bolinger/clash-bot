@@ -1,0 +1,24 @@
+{
+  "name": "clash-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "clash-of-clans-api": "^0.6.4",
+    "discord.js": "^12.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aboli3514/clash-bot.git"
+  },
+  "author": "alexb3514",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aboli3514/clash-bot/issues"
+  },
+  "homepage": "https://github.com/aboli3514/clash-bot#readme"
+}
