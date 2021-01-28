@@ -124,6 +124,10 @@ function updateMemberRoles() {
         let clanMembers = response.memberList;
         let guildMembers = guild.members.cache;
         guildMembers.each(member => {
+            console.log(member.nickname + ' ' + member.roles.cache.array().length);
+            if (member.roles.cache.array().length == 1) {
+                member.roles.add(newMemberRole);
+            }
             if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botRole.name) != botsRole) {
                 if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
