@@ -37,35 +37,48 @@ bot.on('message', async message => {
                 verificationChannel = message.channel;
                 verificationChannel.lastMessage.delete();
                 verificationChannel.send('bound to verification-channel');
-                setTimeout(deleteVerInitMessage, 5000);
+                setTimeout(deleteVerMessage, 2500);
             } else if (message.content.startsWith(prefix + 'verify')) {
                 var info = message.content.split(' ');
                 var tag = info[1];
                 console.log(tag);
                 client.playerByTag(tag).then(response => {
-                    console.log(response);
-                    message.member.setNickname(response.name);
-                    if (response.role == 'leader') {
-                        message.member.roles.add(leaderRole);
-                        message.member.roles.remove(newMemberRole);
-                    } else if (response.role == 'coLeader') {
-                        message.member.roles.add(coleaderRole);
-                        message.member.roles.remove(newMemberRole);
-                    } else if (response.role == 'elder') {
-                        message.member.roles.add(elderRole);
-                        message.member.roles.remove(newMemberRole);
-                    } else {
-                        message.member.roles.add(memberRole);
-                        message.member.roles.remove(newMemberRole);
+                    let found = false;
+                    console.log(userList);
+                    for (i = 0; i < userList.length; i++) {
+                        if (userList[i] == response.name) {
+                            found = true;
+                        }
                     }
-                    verificationChannel.lastMessage.delete();
+                    if (!found) {
+                        message.member.setNickname(response.name);
+                        if (response.role == 'leader') {
+                            message.member.roles.add(leaderRole);
+                            message.member.roles.remove(newMemberRole);
+                        } else if (response.role == 'coLeader') {
+                            message.member.roles.add(coleaderRole);
+                            message.member.roles.remove(newMemberRole);
+                        } else if (response.role == 'elder') {
+                            message.member.roles.add(elderRole);
+                            message.member.roles.remove(newMemberRole);
+                        } else {
+                            message.member.roles.add(memberRole);
+                            message.member.roles.remove(newMemberRole);
+                        }
+                        verificationChannel.lastMessage.delete();
+                    } else {
+                        verificationChannel.lastMessage.delete();
+                        verificationChannel.send('User is already on the server');
+                        setTimeout(deleteVerMessage, 2500);
+                    }
                 }).catch(err => {
-                    verificationChannel.send("Invalid Player Tag");
                     verificationChannel.lastMessage.delete();
-                    setTimeout(deleteInvalidTagMessage, 5000);
+                    verificationChannel.send("Invalid Player Tag");
+                    setTimeout(deleteInvalidTagMessage, 2500);
                 });
             }
-        } else if (message.channel.name == 'bot-commands') {
+        }
+        else if (message.channel.name == 'bot-commands') {
             if (message.content == prefix + 'init') {
                 botCommandsChannel = message.channel;
                 guild = message.guild;
@@ -74,21 +87,27 @@ bot.on('message', async message => {
                 elderRole = guild.roles.cache.find(r => r.name === 'Elder');
                 memberRole = guild.roles.cache.find(r => r.name === 'Member');
                 newMemberRole = guild.roles.cache.find(r => r.name === 'New Member');
+                guild.members.cache.each(member => {
+                    if (member.roles.cache.find(r => newMemberRole) != newMemberRole) {
+                        userList.push(member.nickname);
+                        console.log(member.nickname);
+                    }
+                });
                 botCommandsChannel.lastMessage.delete();
                 botCommandsChannel.send('bound to bot-commands channel');
-                setTimeout(deleteBotInitMessage, 5000);
+                setTimeout(deleteBotMessage, 2500);
             } else if (message.content.startsWith(prefix + 'setClan')) {
                 clanTag = message.content.substring(message.content.indexOf(' ') + 1);
                 client.clanByTag(clanTag).then(response => {
-                    var members = response.memberList;
-                    for (i = 0; i < members.length; i++){
-                        allMemberTags.push(members[i].tag);
-                        userList.push(members[i].name);
-                        console.log(members[i].name);
-                    } 
-                    botCommandsChannel.lastMessage.delete();
+                let members = response.memberList;
+                for (i = 0; i < members.length; i++){
+                    allMemberTags.push(members[i].tag);
+                }
+                botCommandsChannel.lastMessage.delete();
                 }).catch(err => {
-
+                    botCommandsChannel.lastMessage.delete();
+                    botCommandsChannel.send('Invalid clan tag');
+                    setTimeout(deleteBotMessage, 2500);
                 });
             }
         }
@@ -99,10 +118,10 @@ function deleteInvalidTagMessage() {
     verificationChannel.lastMessage.delete();
 }
 
-function deleteVerInitMessage() {
+function deleteVerMessage() {
     verificationChannel.lastMessage.delete().catch(err => {});
 }
 
-function deleteBotInitMessage() {
+function deleteBotMessage() {
     botCommandsChannel.lastMessage.delete().catch(err => {});
 }
