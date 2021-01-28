@@ -18,6 +18,7 @@ var coleaderRole;
 var elderRole;
 var memberRole;
 var newMemberRole;
+var botsRole;
 
 var userList = [];
 var allMemberTags = [];
@@ -58,7 +59,7 @@ bot.on('message', async message => {
                         } else if (response.role == 'coLeader') {
                             message.member.roles.add(coleaderRole);
                             message.member.roles.remove(newMemberRole);
-                        } else if (response.role == 'elder') {
+                        } else if (response.role == 'admin') {
                             message.member.roles.add(elderRole);
                             message.member.roles.remove(newMemberRole);
                         } else {
@@ -87,6 +88,7 @@ bot.on('message', async message => {
                 elderRole = guild.roles.cache.find(r => r.name === 'Elder');
                 memberRole = guild.roles.cache.find(r => r.name === 'Member');
                 newMemberRole = guild.roles.cache.find(r => r.name === 'New Member');
+                botRole = guild.roles.cache.find(r => r.name === 'Bots');
                 guild.members.cache.each(member => {
                     if (member.roles.cache.find(r => newMemberRole) != newMemberRole) {
                         userList.push(member.nickname);
@@ -104,6 +106,9 @@ bot.on('message', async message => {
                     allMemberTags.push(members[i].tag);
                 }
                 botCommandsChannel.lastMessage.delete();
+                botCommandsChannel.send('Bound to clan successfully');
+                setTimeout(deleteBotMessage, 2500);
+                setInterval(updateMemberRoles, 15000);
                 }).catch(err => {
                     botCommandsChannel.lastMessage.delete();
                     botCommandsChannel.send('Invalid clan tag');
@@ -113,6 +118,84 @@ bot.on('message', async message => {
         }
     }
 });
+
+function updateMemberRoles() {
+    client.clanByTag(clanTag).then(response => {
+        let clanMembers = response.memberList;
+        let guildMembers = guild.members.cache;
+        guildMembers.each(member => {
+            if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botRole.name) != botsRole) {
+                if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
+                    for (i = 0; i < clanMembers.length; i++) {
+                        if (clanMembers[i].name == member.nickname) {
+                            console.log('leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            if (clanMembers[i].role != 'leader') {
+                                member.roles.remove(leaderRole);
+                                if (clanMembers[i].role == 'coLeader') {
+                                    member.roles.add(coleaderRole);
+                                } else if (clanMembers[i].role == 'admin') {
+                                    member.roles.add(elderRole);
+                                } else {
+                                    member.roles.add(memberRole);
+                                }
+                            }
+                        }
+                    }
+                } else if (member.roles.cache.find(r => coleaderRole.name === coleaderRole.name) === coleaderRole) {
+                    for (i = 0; i < clanMembers.length; i++) {
+                        if (clanMembers[i].name == member.nickname) {
+                            console.log('coleader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            if (clanMembers[i].role != 'coLeader') {
+                                member.roles.remove(coleaderRole);
+                                if (clanMembers[i].role == 'leader') {
+                                    member.roles.add(leaderRole);
+                                } else if (clanMembers[i].role == 'admin') {
+                                    member.roles.add(elderRole);
+                                } else {
+                                    member.roles.add(memberRole);
+                                }
+                            }
+                        }
+                    }
+                } else if (member.roles.cache.find(r => elderRole.name === elderRole.name) === elderRole) {
+                    for (i = 0; i < clanMembers.length; i++) {
+                        if (clanMembers[i].name == member.nickname) {
+                            console.log('elder ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            if (clanMembers[i].role != 'admin') {
+                                member.roles.remove(elderRole);
+                                if (clanMembers[i].role == 'coLeader') {
+                                    member.roles.add(coleaderRole);
+                                } else if (clanMembers[i].role == 'leader') {
+                                    member.roles.add(leaderRole);
+                                } else {
+                                    member.roles.add(memberRole);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    for (i = 0; i < clanMembers.length; i++) {
+                        if (clanMembers[i].name == member.nickname) {
+                            console.log('member ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            if (clanMembers[i].role != 'member') {
+                                member.roles.remove(memberRole);
+                                if (clanMembers[i].role == 'coLeader') {
+                                    member.roles.add(coleaderRole);
+                                } else if (clanMembers[i].role == 'admin') {
+                                    member.roles.add(elderRole);
+                                } else {
+                                    member.roles.add(leaderRole);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+    });
+}
 
 function deleteInvalidTagMessage() {
     verificationChannel.lastMessage.delete();
