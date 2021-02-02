@@ -1,4 +1,4 @@
-const auth = require("./auth.json");
+const auth = require("./authenticator/auth.json");
 const ClashApi = require('clash-of-clans-api');
 let client = ClashApi({
     token: auth.CLASH_TOKEN
