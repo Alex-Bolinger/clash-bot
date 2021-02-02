@@ -1,5 +1,7 @@
 const auth = require("./authenticator/auth.json");
 const ClashApi = require('clash-of-clans-api');
+const fs = require('fs');
+const info = require('./guildInfo.json');
 let client = ClashApi({
     token: auth.CLASH_TOKEN
 });
@@ -29,17 +31,35 @@ bot.login(auth.DISCORD_TOKEN);
 
 bot.on('ready', () => {
     console.log(getTime() + ' bot has started');
+    if (info.guild != null) {
+        guild = bot.guilds.cache.find(g => g.id === info.guild);
+        verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
+        botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
+        clanTag = info.clanTag;
+        leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
+        coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
+        elderRole = guild.roles.cache.find(r => r.id === info.elderRole);
+        memberRole = guild.roles.cache.find(r => r.id === info.memberRole);
+        newMemberRole = guild.roles.cache.find(r => r.id === info.newMemberRole);
+        botsRole = guild.roles.cache.find(r => r.id === info.botsRole);
+        client.clanByTag(clanTag).then(response => {
+            let members = response.memberList;
+            for (i = 0; i < members.length; i++){
+                allMemberTags.push(members[i].tag);
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+        botCommandsChannel.send('Bound to server succussfully!');
+        setTimeout(deleteBotMessage, 2500);
+        setInterval(updateMemberRoles, 15000);
+    }
 });
 
 bot.on('message', async message => {
     if (message.content.startsWith(prefix)) {
         if (message.channel.name == 'verification-channel') {
-            if (message.content == prefix + 'init') {
-                verificationChannel = message.channel;
-                verificationChannel.lastMessage.delete();
-                verificationChannel.send('bound to verification-channel');
-                setTimeout(deleteVerMessage, 2500);
-            } else if (message.content.startsWith(prefix + 'verify')) {
+            if (message.content.startsWith(prefix + 'verify')) {
                 var info = message.content.split(' ');
                 var tag = info[1];
                 console.log(getTime() + ' verfiy ' + tag);
@@ -87,7 +107,7 @@ bot.on('message', async message => {
                 elderRole = guild.roles.cache.find(r => r.name === 'Elder');
                 memberRole = guild.roles.cache.find(r => r.name === 'Member');
                 newMemberRole = guild.roles.cache.find(r => r.name === 'New Member');
-                botRole = guild.roles.cache.find(r => r.name === 'Bots');
+                botsRole = guild.roles.cache.find(r => r.name === 'Bots');
                 guild.members.cache.each(member => {
                     if (member.roles.cache.find(r => newMemberRole) != newMemberRole) {
                         userList.push(member.nickname);
@@ -104,10 +124,27 @@ bot.on('message', async message => {
                     allMemberTags.push(members[i].tag);
                 }
                 botCommandsChannel.lastMessage.delete();
+                var guildInfo = {
+                    guild: message.guild.id,
+                    clanTag: clanTag,
+                    botCommandsChannel: botCommandsChannel.id,
+                    verificationChannel: guild.channels.cache.find(c => c.name === 'verification-channel').id,
+                    leaderRole: leaderRole.id,
+                    coleaderRole: coleaderRole.id,
+                    elderRole: elderRole.id,
+                    memberRole: memberRole.id,
+                    newMemberRole: newMemberRole.id,
+                    botsRole: botsRole.id
+                }
+                var guildInfoJSON = JSON.stringify(guildInfo);
+                fs.writeFile('guildInfo.json', guildInfoJSON, function(err) {
+                    console.log(err);
+                })
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
                 }).catch(err => {
+                    console.log(err);
                     botCommandsChannel.lastMessage.delete();
                     botCommandsChannel.send('Invalid clan tag');
                     setTimeout(deleteBotMessage, 2500);
@@ -125,8 +162,8 @@ function updateMemberRoles() {
             if (member.roles.cache.array().length == 1) {
                 member.roles.add(newMemberRole);
             }
-            if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botRole.name) != botsRole) {
-                console.log(getTime() + ' ' + member.nickname);
+            if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botsRole.name) == botsRole) {
+                console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.highest.name);
                 if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
