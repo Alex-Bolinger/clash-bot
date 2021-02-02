@@ -122,16 +122,16 @@ function updateMemberRoles() {
         let clanMembers = response.memberList;
         let guildMembers = guild.members.cache;
         guildMembers.each(member => {
-            console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.cache.array().length);
             if (member.roles.cache.array().length == 1) {
                 member.roles.add(newMemberRole);
             }
             if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botRole.name) != botsRole) {
+                console.log(getTime() + ' ' + member.nickname);
                 if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'leader') {
+                                console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(leaderRole);
                                 if (clanMembers[i].role == 'coLeader') {
                                     member.roles.add(coleaderRole);
@@ -146,8 +146,8 @@ function updateMemberRoles() {
                 } else if (member.roles.cache.find(r => coleaderRole.name === coleaderRole.name) === coleaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log(getTime() + ' coleader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'coLeader') {
+                                console.log(getTime() + ' coleader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(coleaderRole);
                                 if (clanMembers[i].role == 'leader') {
                                     member.roles.add(leaderRole);
@@ -162,8 +162,8 @@ function updateMemberRoles() {
                 } else if (member.roles.cache.find(r => elderRole.name === elderRole.name) === elderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log(getTime() + ' elder ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'admin') {
+                                console.log(getTime() + ' elder ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(elderRole);
                                 if (clanMembers[i].role == 'coLeader') {
                                     member.roles.add(coleaderRole);
@@ -178,8 +178,8 @@ function updateMemberRoles() {
                 } else {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log(getTime() + ' member ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'member') {
+                                console.log(getTime() + ' member ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(memberRole);
                                 if (clanMembers[i].role == 'coLeader') {
                                     member.roles.add(coleaderRole);
