@@ -28,7 +28,7 @@ const prefix = '!';
 bot.login(auth.DISCORD_TOKEN);
 
 bot.on('ready', () => {
-    console.log('bot has started');
+    console.log(getTime() + ' bot has started');
 });
 
 bot.on('message', async message => {
@@ -42,10 +42,9 @@ bot.on('message', async message => {
             } else if (message.content.startsWith(prefix + 'verify')) {
                 var info = message.content.split(' ');
                 var tag = info[1];
-                console.log(tag);
+                console.log(getTime() + ' verfiy ' + tag);
                 client.playerByTag(tag).then(response => {
                     let found = false;
-                    console.log(userList);
                     for (i = 0; i < userList.length; i++) {
                         if (userList[i] == response.name) {
                             found = true;
@@ -92,7 +91,6 @@ bot.on('message', async message => {
                 guild.members.cache.each(member => {
                     if (member.roles.cache.find(r => newMemberRole) != newMemberRole) {
                         userList.push(member.nickname);
-                        console.log(member.nickname);
                     }
                 });
                 botCommandsChannel.lastMessage.delete();
@@ -124,7 +122,7 @@ function updateMemberRoles() {
         let clanMembers = response.memberList;
         let guildMembers = guild.members.cache;
         guildMembers.each(member => {
-            console.log(member.nickname + ' ' + member.roles.cache.array().length);
+            console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.cache.array().length);
             if (member.roles.cache.array().length == 1) {
                 member.roles.add(newMemberRole);
             }
@@ -132,7 +130,7 @@ function updateMemberRoles() {
                 if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log('leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'leader') {
                                 member.roles.remove(leaderRole);
                                 if (clanMembers[i].role == 'coLeader') {
@@ -148,7 +146,7 @@ function updateMemberRoles() {
                 } else if (member.roles.cache.find(r => coleaderRole.name === coleaderRole.name) === coleaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log('coleader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            console.log(getTime() + ' coleader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'coLeader') {
                                 member.roles.remove(coleaderRole);
                                 if (clanMembers[i].role == 'leader') {
@@ -164,7 +162,7 @@ function updateMemberRoles() {
                 } else if (member.roles.cache.find(r => elderRole.name === elderRole.name) === elderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log('elder ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            console.log(getTime() + ' elder ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'admin') {
                                 member.roles.remove(elderRole);
                                 if (clanMembers[i].role == 'coLeader') {
@@ -180,7 +178,7 @@ function updateMemberRoles() {
                 } else {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
-                            console.log('member ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                            console.log(getTime() + ' member ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                             if (clanMembers[i].role != 'member') {
                                 member.roles.remove(memberRole);
                                 if (clanMembers[i].role == 'coLeader') {
@@ -197,8 +195,13 @@ function updateMemberRoles() {
             }
         });
     }).catch(err => {
-        console.log(err);
+        console.log(getTime + ' ' + err);
     });
+}
+
+function getTime() {
+    let d = new Date();
+    return d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 }
 
 function deleteInvalidTagMessage() {
