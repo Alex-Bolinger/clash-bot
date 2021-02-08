@@ -238,7 +238,7 @@ function updateMemberRoles() {
 
 function getTime() {
     let d = new Date();
-    return d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    return (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 }
 
 function deleteInvalidTagMessage() {
