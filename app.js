@@ -126,12 +126,14 @@ bot.on('message', async message => {
                     allMemberTags.push(members[i].tag);
                 }
                 botCommandsChannel.lastMessage.delete();
+                verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
+                trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
                 var guildInfo = {
                     guild: message.guild.id,
                     clanTag: clanTag,
                     botCommandsChannel: botCommandsChannel.id,
-                    verificationChannel: guild.channels.cache.find(c => c.name === 'verification-channel').id,
-                    trophyChannel: guild.channels.cache.find(c => c.name === 'trophy-ranks').id,
+                    verificationChannel: verificationChannel.id,
+                    trophyChannel: trophyChannel.id,
                     leaderRole: leaderRole.id,
                     coleaderRole: coleaderRole.id,
                     elderRole: elderRole.id,
@@ -235,6 +237,12 @@ function updateMemberRoles() {
                 }
             }
         });
+        let trophyMessage = '\'\'\'';
+        memberList.foreach(m => {
+            trophyMessage = trophyMessage + m.name + ' ' + m.trophies;
+        });
+        trophyMessage = trophyMessage + '\'\'\'';
+        trophyChannel.send(trophyMessage);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
