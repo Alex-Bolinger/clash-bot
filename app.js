@@ -162,7 +162,6 @@ bot.on('message', async message => {
 function updateMemberRoles() {
     client.clanByTag(clanTag).then(response => {
         let clanMembers = response.memberList;
-        console.log(clanMembers);
         let guildMembers = guild.members.cache;
         guildMembers.each(member => {
             if (member.roles.cache.array().length == 1) {
@@ -238,7 +237,7 @@ function updateMemberRoles() {
             }
         });
         let trophyMessage = '\'\'\'';
-        memberList.foreach(m => {
+        clanMembers.foreach(m => {
             trophyMessage = trophyMessage + m.name + ' ' + m.trophies;
         });
         trophyMessage = trophyMessage + '\'\'\'';
