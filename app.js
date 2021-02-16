@@ -157,6 +157,13 @@ bot.on('message', async message => {
     }
 });
 
+function updateTrophyMessage() {
+    client.clanByTag(clanTag).then(response => {
+        let clanMembers = response.memberList;
+        console.log(clanMembers);
+    }).catch(err => console.log(err));
+}
+
 function updateMemberRoles() {
     client.clanByTag(clanTag).then(response => {
         let clanMembers = response.memberList;
@@ -171,7 +178,7 @@ function updateMemberRoles() {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'leader') {
-                                console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                                //console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(leaderRole);
                                 if (clanMembers[i].role == 'coLeader') {
                                     member.roles.add(coleaderRole);
