@@ -237,7 +237,7 @@ function updateMemberRoles() {
             }
         });
         let trophyMessage = '\'\'\'';
-        clanMembers.foreach(m => {
+        clanMembers.forEach(m => {
             trophyMessage = trophyMessage + m.name + ' ' + m.trophies;
         });
         trophyMessage = trophyMessage + '\'\'\'';
