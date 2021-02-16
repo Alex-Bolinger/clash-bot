@@ -11,6 +11,7 @@ let bot = new Discord.Client();
 
 var verificationChannel;
 var botCommandsChannel;
+var trophyChannel;
 
 var guild;
 var clanTag;
@@ -35,6 +36,7 @@ bot.on('ready', () => {
         guild = bot.guilds.cache.find(g => g.id === info.guild);
         verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
         botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
+        trophyChannel = guild.channels.cache.find(c => c.id === info.trophyChannel);
         clanTag = info.clanTag;
         leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
         coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
@@ -129,6 +131,7 @@ bot.on('message', async message => {
                     clanTag: clanTag,
                     botCommandsChannel: botCommandsChannel.id,
                     verificationChannel: guild.channels.cache.find(c => c.name === 'verification-channel').id,
+                    trophyChannel: guild.channels.cache.find(c => c.name === 'trophy-ranks').id,
                     leaderRole: leaderRole.id,
                     coleaderRole: coleaderRole.id,
                     elderRole: elderRole.id,
