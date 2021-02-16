@@ -146,7 +146,6 @@ bot.on('message', async message => {
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
-                setInterval(updateTrophyMessage, 15000);
                 }).catch(err => {
                     console.log(err);
                     botCommandsChannel.lastMessage.delete();
@@ -158,16 +157,10 @@ bot.on('message', async message => {
     }
 });
 
-function updateTrophyMessage() {
-    client.clanByTag(clanTag).then(response => {
-        let clanMembers = response.memberList;
-        console.log(clanMembers);
-    }).catch(err => console.log(err));
-}
-
 function updateMemberRoles() {
     client.clanByTag(clanTag).then(response => {
         let clanMembers = response.memberList;
+        console.log(clanMembers);
         let guildMembers = guild.members.cache;
         guildMembers.each(member => {
             if (member.roles.cache.array().length == 1) {
