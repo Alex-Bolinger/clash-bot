@@ -146,7 +146,7 @@ bot.on('message', async message => {
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
-                setInterval(updateTrophyMessage, 60000);
+                setInterval(updateTrophyMessage, 15000);
                 }).catch(err => {
                     console.log(err);
                     botCommandsChannel.lastMessage.delete();
@@ -174,12 +174,12 @@ function updateMemberRoles() {
                 member.roles.add(newMemberRole);
             }
             if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botsRole.name) == botsRole) {
-                console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.highest.name);
+                //console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.highest.name);
                 if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'leader') {
-                                //console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
+                                console.log(getTime() + ' leader ' + member.nickname + ' ' + member.roles.cache.array()[0].name + ' ' + clanMembers[i].role);
                                 member.roles.remove(leaderRole);
                                 if (clanMembers[i].role == 'coLeader') {
                                     member.roles.add(coleaderRole);
