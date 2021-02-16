@@ -146,6 +146,7 @@ bot.on('message', async message => {
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
+                setInterval(updateTrophyMessage, 60000);
                 }).catch(err => {
                     console.log(err);
                     botCommandsChannel.lastMessage.delete();
