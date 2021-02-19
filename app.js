@@ -242,8 +242,8 @@ function updateMemberRoles() {
             trophyMessage = trophyMessage + m.clanRank + ') ' + m.name + ': ' + m.trophies + '\n';
         });
         trophyMessage = trophyMessage + "```";
-        trophyChannel.lastMessage.edit(trophyMessage).catch(console.error);
         console.log(trophyChannel.lastMessage);
+        trophyChannel.lastMessage.edit(trophyMessage).catch(console.error);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
