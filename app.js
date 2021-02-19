@@ -239,9 +239,10 @@ function updateMemberRoles() {
         let trophyMessage = "```";
         clanMembers.forEach(m => {
             trophyMessage = trophyMessage + m.name + ' ' + m.trophies + '\n';
+            console.log(m);
         });
         trophyMessage = trophyMessage + "```";
-        trophyChannel.send(trophyMessage);
+        trophyChannel.lastMessage.edit(trophyMessage).catch(console.error);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
