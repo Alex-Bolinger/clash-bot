@@ -236,11 +236,11 @@ function updateMemberRoles() {
                 }
             }
         });
-        let trophyMessage = '\'\'\'';
+        let trophyMessage = "```";
         clanMembers.forEach(m => {
-            trophyMessage = trophyMessage + m.name + ' ' + m.trophies;
+            trophyMessage = trophyMessage + m.name + ' ' + m.trophies + '\n';
         });
-        trophyMessage = trophyMessage + '\'\'\'';
+        trophyMessage = trophyMessage + "```";
         trophyChannel.send(trophyMessage);
     }).catch(err => {
         console.log(getTime + ' ' + err);
