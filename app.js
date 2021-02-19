@@ -243,6 +243,7 @@ function updateMemberRoles() {
         });
         trophyMessage = trophyMessage + "```";
         trophyChannel.lastMessage.edit(trophyMessage).catch(console.error);
+        console.log(trophyChannel.lastMessage);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
