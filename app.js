@@ -130,7 +130,7 @@ bot.on('message', async message => {
                 botCommandsChannel.lastMessage.delete();
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
                 trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
-                trophyChannel.messages.fetch({limit: 1}).then(messages => {
+                trophyChannel.messages.fetch().then(messages => {
                     let message = messages.first();
                     trophyRankMessage = trophyChannel.cache.find(m.id === message);
                 }).catch(console.error);
