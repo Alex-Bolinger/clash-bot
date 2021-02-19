@@ -37,7 +37,6 @@ bot.on('ready', () => {
         verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
         botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
         trophyChannel = guild.channels.cache.find(c => c.id === info.trophyChannel);
-        console.log(trophyChannel.id);
         clanTag = info.clanTag;
         leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
         coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
@@ -242,8 +241,7 @@ function updateMemberRoles() {
             trophyMessage = trophyMessage + m.clanRank + ') ' + m.name + ': ' + m.trophies + '\n';
         });
         trophyMessage = trophyMessage + "```";
-        console.log(trophyChannel.lastMessage);
-        trophyChannel.lastMessage.edit(trophyMessage).catch(console.error);
+        trophyChannel.fetch({limit: 1}).then(messages => messages.first).edit(trophyMessage).catch(console.error);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
