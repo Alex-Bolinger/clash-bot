@@ -132,7 +132,7 @@ bot.on('message', async message => {
                 trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
                 trophyChannel.messages.fetch().then(messages => {
                     let message = messages.first();
-                    trophyRankMessage = trophyChannel.cache.find(m.id === message);
+                    trophyRankMessage = trophyChannel.messages.cache.find(m.id === message);
                 }).catch(console.error);
                 console.log(trophyRankMessage);
                 var guildInfo = {
