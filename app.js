@@ -131,7 +131,6 @@ bot.on('message', async message => {
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
                 trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
                 trophyChannel.messages.fetch('812405283602300968').then(message => {
-                    console.log(message);
                     trophyRankMessage = trophyChannel.messages.cache.find(m => m.id === message);
                 }).catch(console.error);
                 var guildInfo = {
