@@ -130,12 +130,10 @@ bot.on('message', async message => {
                 botCommandsChannel.lastMessage.delete();
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
                 trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
-                trophyChannel.messages.fetch().then(messages => {
-                    let message = messages.first();
-                    console.log(messages);
+                trophyChannel.messages.fetch('812405283602300968').then(message => {
+                    console.log(message);
                     trophyRankMessage = trophyChannel.messages.cache.find(m.id === message);
                 }).catch(console.error);
-                console.log(trophyRankMessage);
                 var guildInfo = {
                     guild: message.guild.id,
                     clanTag: clanTag,
