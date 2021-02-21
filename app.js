@@ -11,8 +11,6 @@ let bot = new Discord.Client();
 
 var verificationChannel;
 var botCommandsChannel;
-var trophyChannel;
-var trophyRankMessage;
 
 var guild;
 var clanTag;
@@ -37,8 +35,6 @@ bot.on('ready', () => {
         guild = bot.guilds.cache.find(g => g.id === info.guild);
         verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
         botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
-        trophyChannel = guild.channels.cache.find(c => c.id === info.trophyChannel);
-        trophyRankMessage = trophyChannel.messages.fetch(info.trophyRankMessage);
         clanTag = info.clanTag;
         leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
         coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
@@ -129,17 +125,11 @@ bot.on('message', async message => {
                 }
                 botCommandsChannel.lastMessage.delete();
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
-                trophyChannel = guild.channels.cache.find(c => c.name === 'trophy-ranks');
-                trophyChannel.messages.fetch('812405283602300968').catch(console.error);
-                console.log(trophyChannel.messages.cache.find(m => m.id === '812405283602300968'));
-                trophyRankMessage = trophyChannel.lastMessage;
                 var guildInfo = {
                     guild: message.guild.id,
                     clanTag: clanTag,
                     botCommandsChannel: botCommandsChannel.id,
                     verificationChannel: verificationChannel.id,
-                    trophyChannel: trophyChannel.id,
-                    trophyRankMessage: trophyRankMessage.id,
                     leaderRole: leaderRole.id,
                     coleaderRole: coleaderRole.id,
                     elderRole: elderRole.id,
@@ -242,12 +232,6 @@ function updateMemberRoles() {
                 }
             }
         });
-        let trophyMessage = "```";
-        clanMembers.forEach(m => {
-            trophyMessage = trophyMessage + m.clanRank + ') ' + m.name + ': ' + m.trophies + '\n';
-        });
-        trophyMessage = trophyMessage + "```";
-        trophyRankMessage.edit(trophyMessage);
     }).catch(err => {
         console.log(getTime + ' ' + err);
     });
