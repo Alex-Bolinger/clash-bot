@@ -62,7 +62,7 @@ bot.on('message', async message => {
             if (message.content.startsWith(prefix + 'verify')) {
                 var info = message.content.split(' ');
                 var tag = info[1];
-                console.log(getTime() + ' \'' + message + '\'');
+                console.log(getTime() + ' \'' + message.content + '\'');
                 client.playerByTag(tag).then(response => {
                     let found = false;
                     for (i = 0; i < userList.length; i++) {
