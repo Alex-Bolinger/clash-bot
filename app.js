@@ -9,7 +9,7 @@ let client = ClashApi({
 const Discord = require('discord.js');
 let bot = new Discord.Client();
 
-class Guild {
+/*class Guild {
     filename
     constructor(filename) {
         this.filename = filename;
@@ -115,7 +115,7 @@ class Guild {
             }
         });
     }
-}
+} */
 
 var verificationChannel;
 var botCommandsChannel;
