@@ -9,6 +9,114 @@ let client = ClashApi({
 const Discord = require('discord.js');
 let bot = new Discord.Client();
 
+class Guild {
+    filename; 
+    constructor(filename) {
+        this.filename = filename;
+    }
+
+    get guildObject() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.guild);
+            }
+        });
+        
+    }
+
+    get verificationChannel() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.verificationChannel);
+            }
+        });
+    }
+
+    get botCommandsChannel() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.botCommandsChannel);
+            }
+        });
+    }
+
+    get clanTag() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.clanTag);
+            }
+        });
+    }
+
+    get leaderRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.leaderRole);
+            }
+        });
+    }
+
+    get coleaderRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.coleaderRole);
+            }
+        });
+    }
+
+    get elderRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.elderRole);
+            }
+        });
+    }
+
+    get memberRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.memberRole);
+            }
+        });
+    }
+
+    get botsRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.botsRole);
+            }
+        });
+    }
+
+    get newMemberRole() {
+        fs.readFile(filename, function(err, data) {
+            if (err) console.log(err);
+            else {
+                let finfo = JSON.parse(data);
+                return bot.guilds.cache.find(g => g.id === finfo.newMemberRole);
+            }
+        });
+    }
+}
+
 var verificationChannel;
 var botCommandsChannel;
 
@@ -140,7 +248,7 @@ bot.on('message', async message => {
                 var guildInfoJSON = JSON.stringify(guildInfo);
                 fs.writeFile('guildInfo.json', guildInfoJSON, function(err) {
                     console.log(err);
-                })
+                });
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
@@ -164,8 +272,7 @@ function updateMemberRoles() {
                 member.roles.add(newMemberRole);
             }
             if (member.roles.cache.find(r => r.name === newMemberRole.name) != newMemberRole ^ member.roles.cache.find(r => r.name === botsRole.name) == botsRole) {
-                //console.log(getTime() + ' ' + member.nickname + ' ' + member.roles.highest.name);
-                if (member.roles.cache.find(r => leaderRole.name === leaderRole.name) === leaderRole) {
+                if (member.roles.cache.find(r => r.name === leaderRole.name) === leaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'leader') {
@@ -181,7 +288,7 @@ function updateMemberRoles() {
                             }
                         }
                     }
-                } else if (member.roles.cache.find(r => coleaderRole.name === coleaderRole.name) === coleaderRole) {
+                } else if (member.roles.cache.find(r => r.name === coleaderRole.name) === coleaderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'coLeader') {
@@ -197,7 +304,7 @@ function updateMemberRoles() {
                             }
                         }
                     }
-                } else if (member.roles.cache.find(r => elderRole.name === elderRole.name) === elderRole) {
+                } else if (member.roles.cache.find(r => r.name === elderRole.name) === elderRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'admin') {
@@ -213,7 +320,7 @@ function updateMemberRoles() {
                             }
                         }
                     }
-                } else {
+                } else if (member.roles.cache.find(r => r.name === memberRole.name) === memberRole) {
                     for (i = 0; i < clanMembers.length; i++) {
                         if (clanMembers[i].name == member.nickname) {
                             if (clanMembers[i].role != 'member') {
