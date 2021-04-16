@@ -119,6 +119,7 @@ let bot = new Discord.Client();
 
 var verificationChannel;
 var botCommandsChannel;
+var rankingMembersChannel;
 
 var guild;
 var clanTag;
@@ -143,6 +144,7 @@ bot.on('ready', () => {
         guild = bot.guilds.cache.find(g => g.id === info.guild);
         verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
         botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
+        rankingMembersChannel = guild.channels.cache.find(c => c.id === info.rankingMembersChannel);
         clanTag = info.clanTag;
         leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
         coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
@@ -161,6 +163,7 @@ bot.on('ready', () => {
         botCommandsChannel.send('Bound to server succussfully!');
         setTimeout(deleteBotMessage, 2500);
         setInterval(updateMemberRoles, 15000);
+        setInterval(pingForWar, 60000);
     }
 });
 
@@ -233,11 +236,13 @@ bot.on('message', async message => {
                 }
                 botCommandsChannel.lastMessage.delete();
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
+                rankingMembersChannel = guild.channels.cache.find(c => c.name === 'ranking-members');
                 var guildInfo = {
                     guild: message.guild.id,
                     clanTag: clanTag,
                     botCommandsChannel: botCommandsChannel.id,
                     verificationChannel: verificationChannel.id,
+                    rankingMembersChannel: rankingMembersChannel.id,
                     leaderRole: leaderRole.id,
                     coleaderRole: coleaderRole.id,
                     elderRole: elderRole.id,
@@ -262,6 +267,25 @@ bot.on('message', async message => {
         }
     }
 });
+
+function pingForWar() {
+    let d = new Date();
+    if ((d.getDate == "1"
+    || d.getDate == "2"
+    || d.getDate == "3"
+    || d.getDate == "4"
+    || d.getDate == "5"
+    || d.getDate == "6"
+    || d.getDate == "7"
+    || d.getDate == "15"
+    || d.getDate == "17"
+    || d.getDate == "19"
+    || d.getDate == "21"
+    || d.getDate == "23") && (d.getHours == "10" && d.getMinutes == "0")) {
+        rankingMembersChannel.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
+        console.log(getTime() + ' Sent start war message');
+    }
+}
 
 function updateMemberRoles() {
     client.clanByTag(clanTag).then(response => {
