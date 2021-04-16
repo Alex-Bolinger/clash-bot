@@ -10,7 +10,7 @@ const Discord = require('discord.js');
 let bot = new Discord.Client();
 
 class Guild {
-    filename; 
+    filename
     constructor(filename) {
         this.filename = filename;
     }
