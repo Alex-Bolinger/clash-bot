@@ -119,7 +119,7 @@ let bot = new Discord.Client();
 
 var verificationChannel;
 var botCommandsChannel;
-var rankingMembersChannel;
+var clanLeadersChat;
 
 var guild;
 var clanTag;
@@ -144,7 +144,7 @@ bot.on('ready', () => {
         guild = bot.guilds.cache.find(g => g.id === info.guild);
         verificationChannel = guild.channels.cache.find(c => c.id === info.verificationChannel);
         botCommandsChannel = guild.channels.cache.find(c => c.id === info.botCommandsChannel);
-        rankingMembersChannel = guild.channels.cache.find(c => c.id === info.rankingMembersChannel);
+        clanLeadersChat = guild.channels.cache.find(c => c.id === info.clanLeadersChat);
         clanTag = info.clanTag;
         leaderRole = guild.roles.cache.find(r => r.id === info.leaderRole);
         coleaderRole = guild.roles.cache.find(r => r.id === info.coleaderRole);
@@ -236,13 +236,13 @@ bot.on('message', async message => {
                 }
                 botCommandsChannel.lastMessage.delete();
                 verificationChannel = guild.channels.cache.find(c => c.name === 'verification-channel');
-                rankingMembersChannel = guild.channels.cache.find(c => c.name === 'ranking-members');
+                clanLeadersChat = guild.channels.cache.find(c => c.name === 'clan_leader_chat');
                 var guildInfo = {
                     guild: message.guild.id,
                     clanTag: clanTag,
                     botCommandsChannel: botCommandsChannel.id,
                     verificationChannel: verificationChannel.id,
-                    rankingMembersChannel: rankingMembersChannel.id,
+                    clanLeadersChat: clanLeadersChat.id,
                     leaderRole: leaderRole.id,
                     coleaderRole: coleaderRole.id,
                     elderRole: elderRole.id,
@@ -282,7 +282,7 @@ function pingForWar() {
     || d.getDate == "19"
     || d.getDate == "21"
     || d.getDate == "23") && (d.getHours == "10" && d.getMinutes == "0")) {
-        rankingMembersChannel.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
+        clanLeadersChat.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
         console.log(getTime() + ' Sent start war message');
     }
 }
