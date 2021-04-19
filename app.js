@@ -257,6 +257,7 @@ bot.on('message', async message => {
                 botCommandsChannel.send('Bound to clan successfully');
                 setTimeout(deleteBotMessage, 2500);
                 setInterval(updateMemberRoles, 15000);
+                setInterval(pingForWar, 60000);
                 }).catch(err => {
                     console.log(err);
                     botCommandsChannel.lastMessage.delete();
@@ -281,7 +282,7 @@ function pingForWar() {
     || d.getDate() == "17"
     || d.getDate() == "19"
     || d.getDate() == "21"
-    || d.getDate() == "23") && (d.getHours() == "12" && d.getMinutes() == "0")) {
+    || d.getDate() == "23") && (d.getHours() == "11" && d.getMinutes() == "30")) {
         clanLeadersChat.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
         console.log(getTime() + ' Sent start war message');
     }
