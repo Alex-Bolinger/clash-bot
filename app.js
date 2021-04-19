@@ -281,7 +281,7 @@ function pingForWar() {
     || d.getDate() == "17"
     || d.getDate() == "19"
     || d.getDate() == "21"
-    || d.getDate() == "23") && (d.getHours() == "10" && d.getMinutes() == "0")) {
+    || d.getDate() == "23") && (d.getHours() == "12" && d.getMinutes() == "0")) {
         clanLeadersChat.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
         console.log(getTime() + ' Sent start war message');
     }
