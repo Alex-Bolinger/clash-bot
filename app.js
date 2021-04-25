@@ -272,17 +272,17 @@ bot.on('message', async message => {
 function pingForWar() {
     let d = new Date();
     if ((d.getDate() == "1"
-    || d.getDate() == "2"
-    || d.getDate() == "3"
-    || d.getDate() == "4"
-    || d.getDate() == "5"
-    || d.getDate() == "6"
-    || d.getDate() == "7"
+    || d.getDate() == "9"
+    || d.getDate() == "11"
+    || d.getDate() == "13"
     || d.getDate() == "15"
     || d.getDate() == "17"
     || d.getDate() == "19"
     || d.getDate() == "21"
-    || d.getDate() == "23") && (d.getHours() == "11" && d.getMinutes() == "30")) {
+    || d.getDate() == "23"
+    || d.getDate() == "25"
+    || d.getDate() == "27"
+    || d.getDate() == "29") && (d.getHours() == "11" && d.getMinutes() == "30")) {
         clanLeadersChat.send(`<@&${leaderRole.id}>` + ' ' + `<@&${coleaderRole.id}>` + ' Start war if you haven\'t already');
         console.log(getTime() + ' Sent start war message');
     }
