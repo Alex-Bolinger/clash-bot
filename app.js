@@ -365,7 +365,7 @@ function updateMemberRoles() {
             }
         });
     }).catch(err => {
-        console.log(getTime + ' ' + err);
+        console.log(getTime() + ' ' + err);
     });
 }
 
