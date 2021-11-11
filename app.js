@@ -37,7 +37,7 @@ bot.on('message', async message => {
                         initialized = 1;
                     }
                 });
-                guilds.each(cGuild => {
+                guilds.forEach(cGuild => {
                     fs.readFile(`${cGuild.clanTag}` + '/settings.json', (err, data) => {
                         if (cGuild.clanTag != undefined && clanTag == cGuild.clanTag) {
                             initialized = 2;
@@ -220,16 +220,16 @@ function newGuild(guild) {
 }
 
 function checkForNewGuilds() {
-    if (info.guilds == undefined) {
+    if (guilds == undefined) {
         bot.guilds.cache.each(guild => {
             newGuild(guild);
         });
     } else {
         guilds = [];
-        for (let i = 0; i < info.guilds.length; i++) {
+        for (let i = 0; i < guilds.length; i++) {
             let found = false;
             bot.guilds.cache.each(guild => {
-                if (guild.id == info.guilds[i]) {
+                if (guild.id == guilds[i]) {
                     found = true;
                 }
             })
@@ -243,17 +243,6 @@ function checkForNewGuilds() {
                 guilds.push(guilds[i]);
             }
         }
-        bot.guilds.cache.each(guild => {
-            let found = false;
-            for (let i = 0; i < guilds.length; i++) {
-                if (guild.id == guilds[i]) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                newGuild(guild);
-            }
-        });
     }
 }
 
