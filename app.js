@@ -202,7 +202,7 @@ function newGuild(guild) {
     });
     fs.open(guild.id + '/settings.json','w+', err => {
         if (err) {
-            console.log(getTime + ' ' + err);
+            console.log(getTime() + ' ' + err);
         }
     });
     let initialized = {
