@@ -71,18 +71,18 @@ bot.on('message', async message => {
                     });
                     channelToDeleteFrom = botCommandsChannel;
                     deleteMessage();
-                    botCommandsChannel.send("Clan Initialized Successfully!")
+                    message.channel.send("Clan Initialized Successfully!")
                     setTimeout(deleteMessage, 2500);
                 } else {
                     if (initialized == 0) {
                         channelToDeleteFrom = message.channel;
                         deleteMessage();
-                        botCommandsChannel.send("Invalid clan tag!");
+                        message.channel.send("Invalid clan tag!");
                         setTimeout(deleteMessage, 2500);
                     } else {
                         channelToDeleteFrom = message.channel;
                         deleteMessage();
-                        botCommandsChannel.send("Clan tag is already in use on another server");
+                        message.channel.send("Clan tag is already in use on another server");
                         setTimeout(deleteMessage, 2500);
                     }
                 }
