@@ -1,15 +1,19 @@
 const auth = require("./authenticator/auth.json");
-const ClashApi = require('clash-of-clans-api');
+//const ClashApi = require('clash-of-clans-api');
 const fs = require('fs');
 var info = JSON.parse(fs.readFileSync('./guildInfo.json'));
-let client = ClashApi({
+/*let client = ClashApi({
     token: auth.CLASH_TOKEN
-});
+});*/
 
 const Discord = require('discord.js');
 let bot = new Discord.Client();
 
+var channelToDeleteFrom;
+
 bot.login(auth.DISCORD_TOKEN);
+
+let prefix = '!';
 
 bot.on('ready', () => {
     console.log(getTime() + ' bot has started');
@@ -18,14 +22,49 @@ bot.on('ready', () => {
 });
 
 bot.on('message', async message => {
-    
+    if (message.content.startsWith(prefix)) {
+        if (message.channel.name == 'bot-commands') {
+            if (message.content.startsWith(prefix + 'init')) {
+                let guild = message.guild;
+                let initialized = true
+                let clanTag = message.content.substring(message.content.indexOf(' ') + 1);
+                let leaderRole = guild.roles.cache.find(r => r.name == 'Leader');
+                let coLeaderRole = guild.roles.cache.find(r => r.name == 'Co-Leader');
+                let elderRole = guild.roles.cache.find(r => r.name == 'Elder');
+                let memberRole = guild.roles.cache.find(r => r.name == 'Member');
+                let botsRole = guild.roles.cache.find(r => r.name == 'Bots');
+                let botCommandsChannel = guild.channels.cache.find(c => c.name == 'bot-commands');
+                let verificationChannel = guild.channels.cache.find(c => c.name == 'verification-channel');
+                let settings = {
+                    clanTag: clanTag,
+                    initialized: initialized,
+                    leaderRole: leaderRole.id,
+                    coLeaderRole: coLeaderRole.id,
+                    elderRole: elderRole.id,
+                    memberRole: memberRole.id,
+                    botsRole: botsRole.id,
+                    botCommandsChannel: botCommandsChannel.id,
+                    verificationChannel: verificationChannel.id
+                };
+                fs.writeFile(`${guild.id}` + '/settings.json', JSON.stringify(settings), err => {
+                    if (err != null) {
+                        console.log(err);
+                    }
+                });
+                channelToDeleteFrom = botCommandsChannel;
+                deleteMessage();
+                botCommandsChannel.send("Clan Initialized Successfully!")
+                setTimeout(deleteMessage, 2500)
+            }
+        }
+    }
 });
 
 function pingForWar() {
     
 }
 
-function updateMemberRoles() {
+/*function updateMemberRoles() {
     guilds.each(guildID => {
         let clanTag;
         let guild = bot.guilds.cache.find(g => g.id === guildID);
@@ -120,7 +159,7 @@ function updateMemberRoles() {
             });
         }
     });
-}
+}*/
 
 
 function newGuild(guild) {
@@ -191,8 +230,6 @@ function getTime() {
     return (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
 }
 
-
-
-function deleteMessage(channel) {
-    channel.lastMessage.delete().catch(err => {});
+function deleteMessage() {
+    channelToDeleteFrom.lastMessage.delete().catch(err => {});
 }
