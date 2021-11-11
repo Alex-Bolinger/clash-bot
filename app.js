@@ -1,10 +1,10 @@
 const auth = require("./authenticator/auth.json");
-//const ClashApi = require('clash-of-clans-api');
+const ClashApi = require('clash-of-clans-api');
 const fs = require('fs');
 var info = JSON.parse(fs.readFileSync('./guildInfo.json'));
-/*let client = ClashApi({
+let client = ClashApi({
     token: auth.CLASH_TOKEN
-});*/
+});
 
 const Discord = require('discord.js');
 let bot = new Discord.Client();
@@ -19,6 +19,7 @@ bot.on('ready', () => {
     console.log(getTime() + ' bot has started');
     checkForNewGuilds();
     setInterval(checkForNewGuilds,5000);
+    setInterval(updateMemberRoles, 60000);
 });
 
 bot.on('message', async message => {
@@ -26,36 +27,65 @@ bot.on('message', async message => {
         if (message.channel.name == 'bot-commands') {
             if (message.content.startsWith(prefix + 'init')) {
                 let guild = message.guild;
-                let initialized = true
                 let clanTag = message.content.substring(message.content.indexOf(' ') + 1);
-                let leaderRole = guild.roles.cache.find(r => r.name == 'Leader');
-                let coLeaderRole = guild.roles.cache.find(r => r.name == 'Co-Leader');
-                let elderRole = guild.roles.cache.find(r => r.name == 'Elder');
-                let memberRole = guild.roles.cache.find(r => r.name == 'Member');
-                let botsRole = guild.roles.cache.find(r => r.name == 'Bots');
-                let botCommandsChannel = guild.channels.cache.find(c => c.name == 'bot-commands');
-                let verificationChannel = guild.channels.cache.find(c => c.name == 'verification-channel');
-                let settings = {
-                    clanTag: clanTag,
-                    initialized: initialized,
-                    leaderRole: leaderRole.id,
-                    coLeaderRole: coLeaderRole.id,
-                    elderRole: elderRole.id,
-                    memberRole: memberRole.id,
-                    botsRole: botsRole.id,
-                    botCommandsChannel: botCommandsChannel.id,
-                    verificationChannel: verificationChannel.id
-                };
-                fs.writeFile(`${guild.id}` + '/settings.json', JSON.stringify(settings), err => {
-                    if (err != null) {
-                        console.log(err);
+                let initialized = 0;
+                client.clanByTag(clanTag).then(response => {
+                    if (clanTag == response.tag) {
+                        initialized = 1;
                     }
                 });
-                channelToDeleteFrom = botCommandsChannel;
-                deleteMessage();
-                botCommandsChannel.send("Clan Initialized Successfully!")
-                setTimeout(deleteMessage, 2500)
+                guilds.each(cGuild => {
+                    fs.readFile(`${cGuild.clanTag}` + '/settings.json', (err, data) => {
+                        if (cGuild.clanTag != undefined && clanTag == cGuild.clanTag) {
+                            initialized = 2;
+                        }
+                    });
+                });
+                if (initialized == 1) {
+                    initialized = true;
+                    let leaderRole = guild.roles.cache.find(r => r.name == 'Leader');
+                    let coLeaderRole = guild.roles.cache.find(r => r.name == 'Co-Leader');
+                    let elderRole = guild.roles.cache.find(r => r.name == 'Elder');
+                    let memberRole = guild.roles.cache.find(r => r.name == 'Member');
+                    let botsRole = guild.roles.cache.find(r => r.name == 'Bots');
+                    let botCommandsChannel = guild.channels.cache.find(c => c.name == 'bot-commands');
+                    let verificationChannel = guild.channels.cache.find(c => c.name == 'verification-channel');
+                    let settings = {
+                        clanTag: clanTag,
+                        initialized: initialized,
+                        leaderRole: leaderRole.id,
+                        coLeaderRole: coLeaderRole.id,
+                        elderRole: elderRole.id,
+                        memberRole: memberRole.id,
+                        botsRole: botsRole.id,
+                        botCommandsChannel: botCommandsChannel.id,
+                        verificationChannel: verificationChannel.id
+                    };
+                    fs.writeFile(`${guild.id}` + '/settings.json', JSON.stringify(settings), err => {
+                        if (err != null) {
+                            console.log(err);
+                        }
+                    });
+                    channelToDeleteFrom = botCommandsChannel;
+                    deleteMessage();
+                    botCommandsChannel.send("Clan Initialized Successfully!")
+                    setTimeout(deleteMessage, 2500);
+                } else {
+                    if (initialized == 0) {
+                        channelToDeleteFrom = message.channel;
+                        deleteMessage();
+                        message.channel.send("Invalid clan tag!");
+                        setTimeout(deleteMessage, 2500);
+                    } else {
+                        channelToDeleteFrom = message.channel;
+                        deleteMessage();
+                        message.channel.send("Clan tag is already in use on another server");
+                        setTimeout(deleteMessage, 2500);
+                    }
+                }
             }
+        } else if (message.channel.name == 'verification-channel') {
+
         }
     }
 });
@@ -64,11 +94,11 @@ function pingForWar() {
     
 }
 
-/*function updateMemberRoles() {
+function updateMemberRoles() {
     guilds.each(guildID => {
         let clanTag;
         let guild = bot.guilds.cache.find(g => g.id === guildID);
-        let initialized;
+        let initialized = false;
         fs.readFile(guildID + '/settings.json', (err, data) => {
             initialized = data.initialized;
             clanTag = data.clanTag;
@@ -159,7 +189,7 @@ function pingForWar() {
             });
         }
     });
-}*/
+}
 
 
 function newGuild(guild) {
