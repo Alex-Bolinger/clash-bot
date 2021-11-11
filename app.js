@@ -44,6 +44,7 @@ bot.on('message', async message => {
                         }
                     });
                 });
+                let botCommandsChannel = guild.channels.cache.find(c => c.name == 'bot-commands');
                 if (initialized == 1) {
                     initialized = true;
                     let leaderRole = guild.roles.cache.find(r => r.name == 'Leader');
@@ -51,7 +52,6 @@ bot.on('message', async message => {
                     let elderRole = guild.roles.cache.find(r => r.name == 'Elder');
                     let memberRole = guild.roles.cache.find(r => r.name == 'Member');
                     let botsRole = guild.roles.cache.find(r => r.name == 'Bots');
-                    let botCommandsChannel = guild.channels.cache.find(c => c.name == 'bot-commands');
                     let verificationChannel = guild.channels.cache.find(c => c.name == 'verification-channel');
                     let settings = {
                         clanTag: clanTag,
@@ -77,12 +77,12 @@ bot.on('message', async message => {
                     if (initialized == 0) {
                         channelToDeleteFrom = message.channel;
                         deleteMessage();
-                        message.channel.send("Invalid clan tag!");
+                        botCommandsChannel.send("Invalid clan tag!");
                         setTimeout(deleteMessage, 2500);
                     } else {
                         channelToDeleteFrom = message.channel;
                         deleteMessage();
-                        message.channel.send("Clan tag is already in use on another server");
+                        botCommandsChannel.send("Clan tag is already in use on another server");
                         setTimeout(deleteMessage, 2500);
                     }
                 }
