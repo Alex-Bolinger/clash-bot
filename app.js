@@ -15,8 +15,11 @@ bot.login(auth.DISCORD_TOKEN);
 
 let prefix = '!';
 
+var guilds = [];
+
 bot.on('ready', () => {
     console.log(getTime() + ' bot has started');
+    guilds = info.guilds;
     checkForNewGuilds();
     setInterval(checkForNewGuilds,5000);
     setInterval(updateMemberRoles, 60000);
@@ -193,7 +196,6 @@ function updateMemberRoles() {
 
 
 function newGuild(guild) {
-    let guilds = info.guilds;
     guilds.push(guild.id);
     fs.mkdir(guild.id, err => {
         if (err) {
@@ -223,7 +225,7 @@ function checkForNewGuilds() {
             newGuild(guild);
         });
     } else {
-        let guilds = [];
+        guilds = [];
         for (let i = 0; i < info.guilds.length; i++) {
             let found = false;
             bot.guilds.cache.each(guild => {
@@ -232,13 +234,13 @@ function checkForNewGuilds() {
                 }
             })
             if (!found) {
-                fs.rmdir(`${info.guilds[i]}`, {recursive: true}, err => {
+                fs.rmdir(`${guilds[i]}`, {recursive: true}, err => {
                     if (err) {
                         console.log(getTime() + ' ' + err);
                     }
                 });
             } else {
-                guilds.push(info.guilds[i]);
+                guilds.push(guilds[i]);
             }
         }
         bot.guilds.cache.each(guild => {
